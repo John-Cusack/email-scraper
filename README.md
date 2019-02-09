@@ -1,5 +1,5 @@
 # email-scraper
-A general-purpose utility written in Python (v3.0+) for crawling websites to extract email addresses. This is a forked project, the original only works on 1 domain at a time, with a small change it now can take multiple.
+A general-purpose utility written in Python (v3.0+) for crawling websites to extract email addresses. This is a forked project, the original only works on 1 domain at a time, with a small change it now can take multiple. crawl_js has not been tested with multiple domains.
 
 ## Overview
 I implemented this using the popular python web crawling framework **scrapy**. I had never used it before so this is probably not the most elegant implementation of a scrapy-based email scraper (say that three times fast!). The project consists  of a single spider ***ThoroughSpider*** which takes 'file_name' as an argument and begins crawling there. 'file_name' should be a csv file with the domains to crawl being in the first column. Two optional arguments add further tuning capability:
@@ -43,11 +43,11 @@ This project is dependent on the following python modules:
 ### How to Run
 Since it is scrapy based, it must be invoked via the standard "scrapy way":
  ```
- scrapy crawl spider -a domain="your.domain.name" -o emails-found.csv
+ scrapy crawl spider -a file_name=domains.csv -o emails-found.csv
  ```
 Or with optional command line arguments like:
 ```
-scrapy crawl spider -a domain="your.domain.name" -a subdomain_exclusions="['blog', 'technology']" -a crawl_js=True -o emails-found.csv
+scrapy crawl spider -a domain=file_name=domains.csv -a subdomain_exclusions="['blog', 'technology']" -a crawl_js=True -o emails-found.csv
 ```
 
 
