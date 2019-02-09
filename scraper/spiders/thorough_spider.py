@@ -5,6 +5,9 @@ from urllib.parse import urljoin, urlparse
 import scrapy
 from scrapy.linkextractors import IGNORED_EXTENSIONS
 from scraper.items import EmailAddressItem
+import pandas as pd
+import tldextract
+
 
 # scrapy.linkextractors has a good list of binary extensions, only slight tweaks needed
 IGNORED_EXTENSIONS.extend(['ico', 'tgz', 'gz', 'bz2'])
@@ -22,13 +25,12 @@ def get_extension_ignore_url_params(url):
 class ThoroughSpider(scrapy.Spider):
     name = "spider"
 
-    def __init__(self, domain=None, subdomain_exclusions=[], crawl_js=False):
-        self.allowed_domains = [domain]
-        start_url = "http://" + domain
+    def __init__(self, file_name=None, subdomain_exclusions=[], crawl_js=False):
+        df = pd.read_csv(file_name)
+        domain = df[df.columns[0]].values
+        self.allowed_domains = domain
+        self.start_urls = ["http://" + s for s in domain]
 
-        self.start_urls = [
-            start_url
-        ]
         self.subdomain_exclusions=subdomain_exclusions
         self.crawl_js = crawl_js
         # boolean command line parameters are not converted from strings automatically
@@ -62,6 +64,7 @@ class ThoroughSpider(scrapy.Spider):
         for found_address in selector.re('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}'):
             item = EmailAddressItem()
             item['email_address'] = found_address
+            item['domain'] = tldextract.extract(response.url).registered_domain
             yield item
 
         for url in all_urls:

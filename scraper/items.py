@@ -10,3 +10,4 @@ import scrapy
 
 class EmailAddressItem(scrapy.Item):
     email_address = scrapy.Field()
+    domain = scrapy.Field()

@@ -10,7 +10,6 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'scraper'
-
 SPIDER_MODULES = ['scraper.spiders']
 NEWSPIDER_MODULE = 'scraper.spiders'
 
@@ -22,18 +21,18 @@ NEWSPIDER_MODULE = 'scraper.spiders'
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+# CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -46,14 +45,17 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'scraper.middlewares.MyCustomSpiderMiddleware': 543,
-#}
+# SPIDER_MIDDLEWARES = {
+#    # 'scraper.middlewares.MyCustomSpiderMiddleware': 543,
+#     'scraper.middlewares.DomainDepthMiddleware': 900,
+#     'scrapy.contrib.spidermiddleware.depth.DepthMiddleware': None
+# }
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'scraper.middlewares.SubdomainBlockerMiddleware': 100,
+
 }
 
 # Enable or disable extensions
@@ -67,6 +69,26 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     'scraper.pipelines.DeDupePipeline': 100,
 }
+
+IGNORED_EXTENSIONS = [
+    # images
+    'mng', 'pct', 'bmp', 'gif', 'jpg', 'jpeg', 'png', 'pst', 'psp', 'tif',
+    'tiff', 'ai', 'drw', 'dxf', 'eps', 'ps', 'svg',
+
+    # audio
+    'mp3', 'wma', 'ogg', 'wav', 'ra', 'aac', 'mid', 'au', 'aiff',
+
+    # video
+    '3gp', 'asf', 'asx', 'avi', 'mov', 'mp4', 'mpg', 'qt', 'rm', 'swf', 'wmv',
+    'm4a', 'm4v', 'flv',
+
+    # office suites
+    'xls', 'xlsx', 'ppt', 'pptx', 'pps', 'doc', 'docx', 'odt', 'ods', 'odg',
+    'odp',
+
+    # other
+    'css', 'pdf', 'exe', 'bin', 'rss', 'zip', 'rar',
+]
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
